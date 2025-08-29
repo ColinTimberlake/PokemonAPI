@@ -1,2 +1,0 @@
-# PokemonAPI
-Small PokemonAPI

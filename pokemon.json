@@ -1,0 +1,383 @@
+{
+  "pokemon": [
+    {
+      "id": 1,
+      "name": "Bulbasaur",
+      "type": ["Grass", "Poison"],
+      
+      "region": "Kanto"
+    },
+	{
+      "id": 2,
+      "name": "Ivysaur",
+      "type": ["Grass", "Poison"],
+      "region": "Kanto"
+    },
+	{
+      "id": 3,
+      "name": "Venusaur",
+      "type": ["Grass", "Poison"],
+      "region": "Kanto"
+    },
+    {
+      "id": 4,
+      "name": "Charmander",
+      "type": ["Fire"],
+      "region": "Kanto"
+    },
+	{
+      "id": 5,
+      "name": "Charmeleon",
+      "type": ["Fire"],
+      "region": "Kanto"
+    },
+	{
+      "id": 6,
+      "name": "Charizard",
+      "type": ["Fire", "Flying"],
+      "region": "Kanto"
+    },
+    {
+      "id": 7,
+      "name": "Squirtle",
+      "type": ["Water"],
+      "region": "Kanto"
+    },
+	{
+      "id": 8,
+      "name": "Wartortle",
+      "type": ["Water"],
+      "region": "Kanto"
+    },
+	{
+      "id": 9,
+      "name": "Blastoise",
+      "type": ["Water"],
+      "region": "Kanto"
+     },
+	 {
+      "id": 155,
+      "name": "Cyndaquil",
+      "type": ["Fire"],
+      "region": "Johto"
+    },
+	{
+      "id": 156,
+      "name": "Quilava",
+      "type": ["Fire"],
+      "region": "Johto"
+    },
+	{
+      "id": 157,
+      "name": "Typhlosion",
+      "type": ["Fire"],
+      "region": "Johto"
+    },
+    {
+      "id": 158,
+      "name": "Totodile",
+      "type": ["Water"],
+      "region": "Johto"
+    },
+	{
+      "id": 159,
+      "name": "Croconaw",
+      "type": ["Water"],
+      "region": "Johto"
+    },
+	{
+      "id": 160,
+      "name": "Feraligatr",
+      "type": ["Water"],
+      "region": "Johto"
+    },
+    {
+      "id": 152,
+      "name": "Chikorita",
+      "type": ["Grass"],
+      "region": "Johto"
+    },
+	{
+      "id": 153,
+      "name": "Bayleef",
+      "type": ["Grass"],
+      "region": "Johto"
+    },
+	{
+      "id": 154,
+      "name": "Meganium",
+      "type": ["Grass"],
+      "region": "Johto"
+    },
+	 {
+      "id": 258,
+      "name": "Mudkip",
+      "type": ["Water"],
+      "region": "Hoenn"
+    },
+	{
+      "id": 259,
+      "name": "Marshtomp",
+      "type": ["Water", "Ground"],
+      "region": "Hoenn"
+    },
+	{
+      "id": 260,
+      "name": "Swampert",
+      "type": ["Water", "Ground"],
+      "region": "Hoenn"
+    },
+	{
+      "id": 255,
+      "name": "Torchic",
+      "type": ["Fire"],
+      "region": "Hoenn"
+    },
+	{
+      "id": 256,
+      "name": "Combusken",
+      "type": ["Fire", "Fight"],
+      "region": "Hoenn"
+    },
+    {
+      "id": 257,
+      "name": "Blaziken",
+      "type": ["Fire", "Fight"],
+      "region": "Hoenn"
+    },
+	{
+      "id": 252,
+      "name": "Treecko",
+      "type": ["Grass"],
+      "region": "Hoenn"
+    },
+	{
+      "id": 253,
+      "name": "Grovyle",
+      "type": ["Grass"],
+      "region": "Hoenn"
+    },
+    {
+      "id": 254,
+      "name": "Sceptile",
+      "type": ["Grass"],
+      "region": "Hoenn"
+    },
+	{
+      "id": 393,
+      "name": "Piplup",
+      "type": ["Water"],
+      "region": "Sinnoh"
+    },
+	{
+      "id": 394,
+      "name": "Prinplup",
+      "type": ["Water"],
+      "region": "Sinnoh"
+     },
+	 {
+      "id": 395,
+      "name": "Empoleon",
+      "type": ["Water", "Steel"],
+      "region": "Sinnoh"
+    },
+	{
+      "id": 390,
+      "name": "Chimchar",
+      "type": ["Fire"],
+      "region": "Sinnoh"
+    },
+	{
+      "id": 391,
+      "name": "Monferno",
+      "type": ["Fire"],
+      "region": "Sinnoh"
+    },
+    {
+      "id": 392,
+      "name": "Infernape",
+      "type": ["Fire"],
+      "region": "Sinnoh"
+    },
+	{
+      "id": 387,
+      "name": "Turtwig",
+      "type": ["Grass"],
+      "region": "Sinnoh"
+    },
+	{
+      "id": 388,
+      "name": "Grotle",
+      "type": ["Grass"],
+      "region": "Sinnoh"
+    },
+    {
+      "id": 389,
+      "name": "Torterra",
+      "type": ["Grass"],
+      "region": "Sinnoh"
+    },
+	{
+      "id": 501,
+      "name": "Oshawott",
+      "type": ["Water"],
+      "region": "Unova"
+    },
+	{
+      "id": 502,
+      "name": "Dewott",
+      "type": ["Water"],
+      "region": "Unova"
+    },
+	 {
+      "id": 503,
+      "name": "Samurott",
+      "type": ["Water"],
+      "region": "Unova"
+    },
+	{
+      "id": 495,
+      "name": "Snivy",
+      "type": ["Grass"],
+      "region": "Unova"
+    },
+	{
+      "id": 496,
+      "name": "Servine",
+      "type": ["Grass"],
+      "region": "Unova"
+    },
+	{
+      "id": 497,
+      "name": "Serperior",
+      "type": ["Grass"],
+      "region": "Unova"
+    },
+	{
+      "id": 498,
+      "name": "Tepig",
+      "type": ["Fire"],
+      "region": "Unova"
+    },
+    {
+      "id": 499,
+      "name": "Pignite",
+      "type": ["Fire", "Fight"],
+      "region": "Unova"
+    },
+	{
+      "id": 500,
+      "name": "Emboar",
+      "type": ["Fire", "Fight"],
+      "region": "Unova"
+    },
+	{
+      "id": 650,
+      "name": "Chespin",
+      "type": ["Grass"],
+      "region": "Kalos"
+    },
+    {
+      "id": 651,
+      "name": "Quilladin",
+      "type": ["Grass"],
+      "region": "Kalos"
+    },
+	{
+      "id": 652,
+      "name": "Chesnaught",
+      "type": ["Grass", "Fight"],
+      "region": "Kalos"
+    },
+	{
+      "id": 653,
+      "name": "Fenekin",
+      "type": ["Fire"],
+      "region": "Kalos"
+     },
+	 {
+      "id": 654,
+      "name": "Braixen",
+      "type": ["Fire"],
+      "region": "Kalos"
+    },
+	{
+      "id": 655,
+      "name": "Delphox",
+      "type": ["Fire", "Psychic"],
+      "region": "Kalos"
+    },
+	{
+      "id": 656,
+      "name": "Froakie",
+      "type": ["Water"],
+      "region": "Kalos"
+    },
+    {
+      "id": 657,
+      "name": "Frogadier",
+      "type": ["Water"],
+      "region": "Kalos"
+    },
+	{
+      "id": 658,
+      "name": "Greninja",
+      "type": ["Water"],
+      "region": "Kalos"
+    },
+	{
+      "id": 722,
+      "name": "Rowlet",
+      "type": ["Grass", "Flying"],
+      "region": "Alola"
+    },
+    {
+      "id": 723,
+      "name": "Dartrix",
+      "type": ["Grass", "Flying"],
+      "region": "Alola"
+    },
+	{
+      "id": 724,
+      "name": "Decidueye",
+      "type": ["Grass", "Ghost"],
+      "region": "Alola"
+    },
+	{
+      "id": 725,
+      "name": "Litten",
+      "type": ["Fire"],
+      "region": "Alola"
+    },
+	 {
+      "id": 726,
+      "name": "Torracat",
+      "type": ["Fire"],
+      "region": "Alola"
+    },
+	{
+      "id": 727,
+      "name": "Incineroar",
+      "type": ["Fire"],
+      "region": "Alola"
+    },
+	{
+      "id": 728,
+      "name": "Popplio",
+      "type": ["Water"],
+      "region": "Alola"
+    },
+	 {
+      "id": 729,
+      "name": "Brionne",
+      "type": ["Water"],
+      "region": "Alola"
+    },
+	{
+      "id": 730,
+      "name": "Primarina",
+      "type": ["Water", "Fairy"],
+      "region": "Alola"
+    }
+  ]
+}
