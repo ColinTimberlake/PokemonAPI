@@ -1,11 +1,39 @@
         const express = require('express');
         const app = express();
-        const port = 3000;
+        const pokemonData = require('./pokemon.json');
+        const pokemon=pokemonData.pokemon;
+        
 
-        app.get('/', (req, res, next) => {
-          res.send('API running');
+        app.get('/pokemon', (req, res, next) => {
+          res.send(pokemon);
         });
 
-        app.listen(port, () => {
-          console.log(`Server listening at http://localhost:${port}`);
+        app.get('/pokemon/:id', (req, res, next) => {
+          const id = parseInt(req.params.id);
+          const poke = pokemon.find(p => p.id === id);
+          if (poke) {
+            res.send(poke);
+          } else {
+            res.status(404).send({error: 'Pokemon not found'});
+          }
         });
+
+        app.post('/pokemon', express.json(), (req, res, next) => {
+          const newPoke = req.body;
+          newPoke.id = pokemon.length ? pokemon[pokemon.length - 1].id + 1 : 1;
+          pokemon.push(newPoke);
+          res.status(201).send(newPoke);
+        });
+
+        app.delete('/pokemon/:id', (req, res, next) => {
+          const id = parseInt(req.params.id);
+          const index = pokemon.findIndex(p => p.id === id);
+          if (index !== -1) {
+            const deletedPoke = pokemon.splice(index, 1);
+            res.send(deletedPoke[0]);
+          } else {
+            res.status(404).send({error: 'Pokemon not found'});
+          }  
+        }); 
+
+        module.exports = {app};
