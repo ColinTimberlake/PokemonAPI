@@ -2,7 +2,8 @@
         const app = express();
         const pokemonData = require('./pokemon.json');
         const pokemon=pokemonData.pokemon;
-        
+        const path = require('path');
+        app.use(express.static(path.join(__dirname)));
 
         app.get('/pokemon', (req, res, next) => {
           res.send(pokemon);
@@ -34,6 +35,18 @@
           } else {
             res.status(404).send({error: 'Pokemon not found'});
           }  
+        }); 
+
+        app.put('/pokemon/:id', express.json(), (req, res, next) => {
+          const id = parseInt(req.params.id);
+          const index = pokemon.findIndex(p => p.id === id);
+          if (index !== -1) {
+            const updatedPoke = {...pokemon[index], ...req.body, id: id};
+            pokemon[index] = updatedPoke;
+            res.send(updatedPoke);
+          } else {
+            res.status(404).send({error: 'Pokemon not found'});
+          }   
         }); 
 
         module.exports = {app};
