@@ -1,79 +1,148 @@
         const express = require('express');
-        const fs = require('fs');
         const app = express();
-        const pokemonData = require('./pokemon.json');
-        const pokemon=pokemonData.pokemon;
         const path = require('path');
 
         app.use(express.static(path.join(__dirname)));
         app.use(express.json());
 
-        app.get('/pokemon', (req, res, next) => {
-          res.json(pokemon);
+        async function fetchFromPokeAPI(url) {
+          try {
+            const response = await fetch(url);
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return await response.json();          
+          } catch (error) {
+            console.error(`Failed to fetch ${url}:`, error);
+            throw error;  
+          }
+        }
+        
+        async function getPokemonDetails(url) {
+          const data= await fetchFromPokeAPI(url);
+
+          return {
+            id: data.id,
+            name: data.name,
+            types: data.types.map(type => type.type.name),
+            sprite: data.sprites.front_default,
+            height: data.height, 
+            weight: data.weight,
+            abilities: data.abilities.map(ability => ability.ability.name),
+            stats: data.stats.map(stat => ({
+              name: stat.stat.name,
+              value: stat.base_stat
+            }))
+          };
+        }
+
+        // Search Pokemon by name or ID
+        app.get('/api/pokemon/:nameOrId', async (req, res) => {
+          try {
+            const{ nameOrId } = req.params;
+            console.log(`Fetching Pokemon: ${nameOrId}`);
+
+            const pokemonData = await fetchFromPokeAPI(`https://pokeapi.co/api/v2/pokemon/${nameOrId.toLowerCase()}`);
+
+            const pokemon = {
+              id: pokemonData.id,
+              name: pokemonData.name,
+              types: pokemonData.types.map(type => type.type.name),
+              sprite: pokemonData.sprites.front_default,
+              height: pokemonData.height,
+              weight: pokemonData.weight,
+              abilities: pokemonData.abilities.map(ability => ability.ability.name),
+              stats: pokemonData.stats.map(stat => ({
+                name: stat.stat.name,
+                value:stat.base_stat
+              }))
+            };
+            res.json(pokemon);
+          } catch (error) {
+            console.error('Error fetching Pokemon:', error);
+            res.status(404).json({ error: 'Pokemon not found' });
+          }
         });
 
+
         // SEARCH pokemon by name, type, or region
-        app.get('/api/search', (req, res) => {
-          const query = req.query.q?.toLowerCase() || '';
+        app.get('/api/search', async (req, res) => {
+          try {
+            const query = req.query.q?.toLowerCase() || '';
+            console.log(`Searching for: ${query}`);
     
-          if (!query) {
-            return res.json([]);
-          }
-    
-          const results = pokemon.filter(p => 
-            p.name.toLowerCase().includes(query) ||
-            p.type.some(type => type.toLowerCase().includes(query)) ||
-            p.region.toLowerCase().includes(query)
-          );
-    
-          res.json(results);
+            if (!query) {
+              return res.json([]);
+            }
+
+            const speciesData = await fetchFromPokeAPI('https://pokeapi.co/api/v2/pokemon-species?limit=1000');
+
+            const matchingSpecies = speciesData.results.filter(pokemon =>
+              pokemon.name.includes(query)
+            ).slice(0,20); //limits to 20 results for performance
+
+            const pokemonPromises = matchingSpecies.map(async (species) => {
+              try {
+                return await getPokemonDetails(`https://pokeapi.co/api/v2/pokemon/${species.name}`);
+              } catch (error) {
+                console.error(`Error fetching ${species.name}:`, error);
+                return null;
+              }
+            });
+
+            const pokemonResults = await Promise.all(pokemonPromises);
+            const validResults = pokemonResults.filter(pokemon => pokemon !== null);
+            
+            console.log(`Found ${validResults.length} Pokemon matching "${query}"`);
+            res.json(validResults);
+            
+          } catch (error) {
+            console.error('Search error: ', error);
+            res.status(500).json({ error: 'Search failed' });
+          }                                                   
         });
 
         // GET random pokemon
-        app.get('/api/random', (req, res) => {
-          const randomIndex = Math.floor(Math.random() * pokemon.length);
-          res.json(pokemon[randomIndex]);
-        });
+        app.get('/api/random', async (req, res) => {
+          try {
+            const randomId = Math.floor(Math.random() * 1010) +1;
+            console.log(`Getting random Pokemon with ID: ${randomId}`);
 
-        app.get('/pokemon/:id', (req, res, next) => {
-          const id = parseInt(req.params.id);
-          const poke = pokemon.find(p => p.id === id);
-          if (poke) {
-            res.json(poke);
-          } else {
-            res.status(404).json({error: 'Pokemon not found'});
+            const pokemon = await getPokemonDetails(`https://pokeapi.co/api/v2/pokemon/${randomId}`);
+            res.json(pokemon);
+          } catch (error) {
+            console.error('Random Pokemon error:', error);
+            res.status(500).json({ error: 'Failed to get random Pokemon' });
           }
         });
 
-        app.post('/pokemon', express.json(), (req, res, next) => {
-          const newPoke = req.body;
-          newPoke.id = pokemon.length ? Math.max(...pokemon.map(p=>p.id)) + 1 : 1;
-          pokemon.push(newPoke);
-          res.status(201).json(newPoke);
+        app.get('/api/type/:typeName',  async(req, res) => {
+          try {
+            const { typeName } = req.params;
+            console.log(`Fetching Pokemon of type: ${typeName}`);
+
+            const typeData = await fetchFromPokeAPI(`https://pokeapi.co/api/v2/type/${typeName.toLowerCase()}`);
+            
+            const pokemonOfType = typeData.pokemon.slice(0, 20); 
+
+            const pokemonPromises = pokemonOfType.map(async (entry) => {
+              try {
+                return await getPokemonDetails(entry.pokemon.url);
+              } catch (error) {
+                console.error('Error fetching Pokemon: ', error);
+                return null;
+              }
+            });
+
+            const pokemonResults = await Promise.all(pokemonPromises);
+            const validResults = pokemonResults.filter(pokemon => pokemon !== null);  
+
+            res.json(validResults);
+          } catch (error) {
+            console.error('Type search error:', error);
+            res.status(404).json({ error: `Type '${req.params.typeName}' not found` });
+          }
         });
-
-        app.delete('/pokemon/:id', (req, res, next) => {
-          const id = parseInt(req.params.id);
-          const index = pokemon.findIndex(p => p.id === id);
-          if (index !== -1) {
-            const deletedPoke = pokemon.splice(index, 1);
-            res.json(deletedPoke[0]);
-          } else {
-            res.status(404).json({error: 'Pokemon not found'});
-          }  
-        }); 
-
-        app.put('/pokemon/:id', express.json(), (req, res, next) => {
-          const id = parseInt(req.params.id);
-          const index = pokemon.findIndex(p => p.id === id);
-          if (index !== -1) {
-            const updatedPoke = {...pokemon[index], ...req.body, id: id};
-            pokemon[index] = updatedPoke;
-            res.send(updatedPoke);
-          } else {
-            res.status(404).send({error: 'Pokemon not found'});
-          }   
-        }); 
 
 
         module.exports = {app};

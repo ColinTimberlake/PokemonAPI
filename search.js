@@ -1,8 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded and parsed');
+
+
     const searchBtn = document.getElementById('search-btn');
     const randomBtn = document.getElementById('random');
-    const allBtn = document.getElementById('all');
+    const typeSelect = document.getElementById('type-dropdown');
     const searchInput = document.getElementById('site-search');
     const resultsDiv = document.getElementById('pokemon-cards');
     
@@ -10,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("Elements found:");
     console.log("- Search button:", searchBtn);
     console.log("- Random button:", randomBtn);
-    console.log("- All button:", allBtn);
     console.log("- Search input:", searchInput);
     console.log("- Results div:", resultsDiv);
     
@@ -50,50 +51,51 @@ document.addEventListener('DOMContentLoaded', () => {
                 resultsDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
             }
         });
-    } else {
-        console.error("❌ Search button not found!");
-    }
+    } 
     
-    // Random button event
+    // GET Random Pokemon
     if (randomBtn) {
         randomBtn.addEventListener('click', async () => {
-            console.log("🎲 Random button clicked!");
+            console.log("Random button clicked!");
+
+            resultsDiv.innerHTML = '<p>Loading random Pokemon...</p>';
             
             try {
-                const response = await fetch('/pokemon');
-                const allPokemon = await response.json();
-                const randomIndex = Math.floor(Math.random() * allPokemon.length);
-                const randomPokemon = allPokemon[randomIndex];
+                const response = await fetch('/api/random');
+                const results = await response.json();
                 
-                displayResults([randomPokemon]);
+                displayResults([results]);
+
+            } catch (error) {
+                console.error("Random fetch error:", error);
+                resultsDiv.innerHTML = '<p style="color: red;">Failed to load random Pokemon</p>';
+            }   
+        });
+    }
+
+    // Search by type(if dropdown exists)
+    if (typeSelect) {
+        typeSelect.addEventListener('change', async () => {
+            const selectedType = typeSelect.value;
+            if(!selectedType) return;
+
+            console.log(`Type selected: ${selectedType}`);
+            resultsDiv.innerHTML = `<p>Loading ${selectedType} type Pokemon...</p>`;
+            
+            try {
+            
+                const response= await fetch(`/api/type/${selectedType}`);
+                const results=await response.json();
+
+                displayResults(results);
                 
             } catch (error) {
-                console.error("❌ Random error:", error);
-                resultsDiv.innerHTML = `<p style="color: red;">Error getting random Pokemon</p>`;
+                console.error("Type search error:", error);
+                resultsDiv.innerHTML = `<p style="color: red;"> Failed to load ${selectedType} Pokemon</p>`;
             }
         });
     }
-    
-    // All button event
-    if (allBtn) {
-        allBtn.addEventListener('click', async () => {
-            console.log("📋 All button clicked!");
-            
-            resultsDiv.innerHTML = '<p>Loading all Pokemon...</p>';
-            
-            try {
-                const response = await fetch('/pokemon');
-                const allPokemon = await response.json();
-                
-                displayResults(allPokemon);
-                
-            } catch (error) {
-                console.error("❌ All Pokemon error:", error);
-                resultsDiv.innerHTML = `<p style="color: red;">Error loading Pokemon</p>`;
-            }
-        });
-    }
-    
+
     // Display function
     function displayResults(pokemonArray) {
         console.log(`📺 Displaying ${pokemonArray.length} Pokemon`);
@@ -104,10 +106,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         const html = pokemonArray.map(pokemon => `
-            <div class="pokemon-card" style="border: 2px solid #4CAF50; padding: 15px; margin: 10px; border-radius: 8px; background: white;">
-                <h3 style="margin: 0 0 10px 0; color: #333;">${pokemon.name} (#${pokemon.id})</h3>
-                <p style="margin: 5px 0;"><strong>Type:</strong> ${pokemon.type.join(', ')}</p>
-                <p style="margin: 5px 0;"><strong>Region:</strong> ${pokemon.region}</p>
+            <div class="pokemon-card" style="border: 2px solid #4CAF50; padding: 15px; margin: 10px; border-radius: 8px; background: white; display: inline-block; width: 250px;">
+                <div style="text-align: center;">
+                    ${pokemon.sprite ? `<img src="${pokemon.sprite}" alt="${pokemon.name}" style="width: 120px; height: 120px;">` : ''}
+                    <h3 style="margin: 10px 0; color:#333; text-transform: capitalize">${pokemon.name} (#${pokemon.id}) </h3>
+                </div>
+
+                <p><strong>Type:</strong> ${pokemon.types.join(', ')}</p>
+                <p><strong>Height:</strong> ${(pokemon.height/10).toFixed(1)}m</p>
+                <p><strong>Weight:</strong> ${(pokemon.weight/10).toFixed(1)}kg</p>
+                <p><strong>Abilities:</strong> ${pokemon.abilities.join(', ')}</p>
+
+                <div style="margin-top: 10px;">
+                    <strong>Stats:</strong>
+                    ${pokemon.stats.map(stat => `
+                        <div style="margin: 2px 0; font-size: 12px;">
+                            ${stat.name}: ${stat.value}
+                        </div>
+                    `).join('')}
+                </div>         
             </div>
         `).join('');
         
@@ -118,20 +135,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (searchInput) {
         searchInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                console.log("⌨️ Enter key pressed!");
                 searchBtn.click();
             }
         });
     }
     
-    // Test connection on load
-    console.log("🧪 Testing server connection...");
-    fetch('/pokemon')
-        .then(response => response.json())
-        .then(data => {
-            console.log(`✅ Server connected! ${data.length} Pokemon loaded.`);
-        })
-        .catch(error => {
-            console.error("❌ Server connection failed:", error);
-        });
+    console.log("PokeAPI Ready");
 });
