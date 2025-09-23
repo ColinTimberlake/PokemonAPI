@@ -41,5 +41,3 @@ cd pokemon-api-sandbox
 ## License
 This project is licensed under the MIT License
 
- License 
-This project is licensed underthe MIT License
